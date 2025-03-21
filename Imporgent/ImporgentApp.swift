@@ -13,7 +13,7 @@ struct ImporgentApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MatrixView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }

@@ -45,6 +45,26 @@
 			path = ImporgentUITests;
 			sourceTree = "<group>";
 		};
+		A71D6C452D8DA697001B1426 /* Features */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Features;
+			sourceTree = "<group>";
+		};
+		A77283FB2D8DA6E4005E1F73 /* Models */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A77283FD2D8DA726005E1F73 /* Utilities */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		A77283FE2D8DA731005E1F73 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Resources;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,6 +95,10 @@
 		A71D6C092D8DA587001B1426 = {
 			isa = PBXGroup;
 			children = (
+				A77283FE2D8DA731005E1F73 /* Resources */,
+				A77283FD2D8DA726005E1F73 /* Utilities */,
+				A77283FB2D8DA6E4005E1F73 /* Models */,
+				A71D6C452D8DA697001B1426 /* Features */,
 				A71D6C142D8DA587001B1426 /* Imporgent */,
 				A71D6C2A2D8DA588001B1426 /* ImporgentTests */,
 				A71D6C342D8DA588001B1426 /* ImporgentUITests */,
@@ -109,6 +133,10 @@
 			);
 			fileSystemSynchronizedGroups = (
 				A71D6C142D8DA587001B1426 /* Imporgent */,
+				A71D6C452D8DA697001B1426 /* Features */,
+				A77283FB2D8DA6E4005E1F73 /* Models */,
+				A77283FD2D8DA726005E1F73 /* Utilities */,
+				A77283FE2D8DA731005E1F73 /* Resources */,
 			);
 			name = Imporgent;
 			packageProductDependencies = (
