@@ -77,3 +77,19 @@ struct TaskDetailView: View {
                 }
     }
 }
+
+#Preview("Task Detail View") {
+    let context = PersistenceController.preview.container.viewContext
+    let task = TaskItem(context: context)
+    task.title = "Sample Task"
+    task.details = "This is a detailed description of the sample task."
+    task.deadline = Date()
+    task.quadrant = 2
+    task.isCompleted = false
+    
+    // Save the context explicitly
+    try? context.save()
+    
+    return TaskDetailView(task: task)
+        .environment(\.managedObjectContext, context)
+}

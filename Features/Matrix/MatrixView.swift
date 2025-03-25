@@ -15,19 +15,49 @@ struct MatrixView: View {
     
     @State private var isShowingTaskInput = false
     @State private var selectedTask: TaskItem? // Track selected task
+    @State private var selectedSpace: String? = nil // Track selected space
+
+    private var filteredTasks: [TaskItem] {
+        if let space = selectedSpace {
+            return tasks.filter { $0.tags?.contains(space) == true }
+        }
+        return Array(tasks)
+    }
 
     var body: some View {
         NavigationStack {
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 20) {
-                    ForEach(1...4, id: \.self) { quadrant in
-                        QuadrantView(tasks: tasks.filter { $0.quadrant == quadrant }, quadrant: quadrant, selectedTask: $selectedTask)
+            VStack(spacing: 10) {
+                VStack {
+                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                        ForEach(1...4, id: \.self) { quadrant in
+                            QuadrantView(
+                                tasks: filteredTasks.filter { $0.quadrant == quadrant },
+                                quadrant: quadrant,
+                                selectedTask: $selectedTask
+                            )
+                            .frame(height: 200) // Fixed height per quadrant
+                            .background(Color.gray.opacity(0.1))
+                            .cornerRadius(10)
+                        }
                     }
                 }
-                .padding()
+                .frame(maxHeight: UIScreen.main.bounds.height * (2/3)) // Takes up 2/3 of the screen
+
+                Spacer() // Pushes everything to top 2/3rds
             }
-            .navigationBarTitle("Imporgent")
+            .padding()
+            .navigationBarTitle(selectedSpace.map { "Imporgent - \($0)" } ?? "Imporgent")
             .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Menu {
+                        Button("All Tasks") { selectedSpace = nil }
+                        Button("Work") { selectedSpace = "Work" }
+                        Button("Personal") { selectedSpace = "Personal" }
+                        Button("Hobby") { selectedSpace = "Hobby" }
+                    } label: {
+                        Label("Select Space", systemImage: "line.3.horizontal.decrease.circle")
+                    }
+                }
                 ToolbarItem(placement: .primaryAction) {
                     Button {
                         isShowingTaskInput = true
@@ -59,14 +89,21 @@ struct QuadrantView: View {
                 .foregroundColor(.primary)
                 .padding(.bottom, 8)
             
-            ForEach(tasks) { task in
-                TaskCard(task: task)
-                    .onTapGesture {
-                        selectedTask = task // Set the selected task
+            ScrollView {
+                VStack(spacing: 8) {
+                    ForEach(tasks) { task in
+                        TaskCard(task: task)
+                            .onTapGesture {
+                                selectedTask = task // Set the selected task
+                            }
                     }
+                }
+                .frame(maxWidth: .infinity) // Ensure task list expands
             }
+            .frame(maxHeight: .infinity) // Allow scrolling to take full quadrant height
         }
         .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity) // Ensure quadrant takes full available space
         .background(Color.gray.opacity(0.1))
         .cornerRadius(10)
     }
@@ -107,10 +144,6 @@ struct TaskCard: View {
     }
 }
 
-/*
- TEMPORAILY DIABLING PREVIEWS
- 
- 
 // Previews
 #Preview {
     MatrixView()
@@ -119,26 +152,29 @@ struct TaskCard: View {
 
 #Preview("Quadrant View") {
     let context = PersistenceController.preview.container.viewContext
-    let task = TaskItem(context: context)
-    task.title = "Sample Task"
-    task.details = "This is a sample task for preview."
-    task.quadrant = 1
+    var tasks: [TaskItem] = []
     
-    QuadrantView(tasks: [task], quadrant: 1, selectedTask: .constant(nil))
+    for i in 1...5 {
+        let task = TaskItem(context: context)
+        task.title = "Sample Task \(i)"
+        task.details = "This is sample task \(i) for preview."
+        task.quadrant = 1
+        tasks.append(task)
+    }
+    
+    // Save the context explicitly
+    try? context.save()
+    
+    return QuadrantView(tasks: tasks, quadrant: 1, selectedTask: .constant(nil))
         .environment(\.managedObjectContext, context)
 }
 
 #Preview("Task Card") {
     let context = PersistenceController.preview.container.viewContext
     let task = TaskItem(context: context)
-    task.title = "Sample Task"
-    task.details = "This is a sample task for preview."
-    task.quadrant = 1
+    task.title = "Test Task"
+    task.details = "This task is an example of a fully detailed task card preview."
+    task.deadline = Date()
     
-    TaskCard(task: task)
-        .environment(\.managedObjectContext, context)
-        .previewLayout(.sizeThatFits)
-        .padding()
+    return TaskCard(task: task)
 }
-
- */

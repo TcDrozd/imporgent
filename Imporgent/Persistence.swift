@@ -32,25 +32,24 @@ struct PersistenceController {
     }
 
     // Preview instance
-    static var preview: PersistenceController = {
-        let result = PersistenceController(inMemory: true)
-        let viewContext = result.container.viewContext
-        
-        // Add sample data
-        for i in 1..<5 {
-            let task = TaskItem(context: viewContext)
-            task.title = "Task \(i)"
-            task.details = "This is a sample task for preview \(i)."
-            task.quadrant = Int16(i)
-            task.isCompleted = false
-        }
-        
+    static let preview: PersistenceController = {
+        let controller = PersistenceController(inMemory: true) // Use in-memory store for preview
+        let viewContext = controller.container.viewContext
+
+        // Create sample tasks
+        let task = TaskItem(context: viewContext)
+        task.title = "Sample Task"
+        task.details = "This is a preview task."
+        task.deadline = Date()
+        task.quadrant = 1
+        task.isCompleted = false
+
         do {
             try viewContext.save()
         } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            fatalError("❌ Failed to save preview data: \(error)")
         }
-        return result
+
+        return controller
     }()
 }

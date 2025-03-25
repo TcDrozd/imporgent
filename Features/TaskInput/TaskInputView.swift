@@ -16,6 +16,10 @@ struct TaskInputView: View {
     @State private var deadline: Date = Date()
     @State private var suggestedQuadrant: Int = 1
     
+    // Importance / Urgency scores
+    @State private var importance: Double = 5
+    @State private var urgency: Double = 5
+    
     var task: TaskItem? // Optional task for editing
     
     var body: some View {
@@ -33,18 +37,16 @@ struct TaskInputView: View {
                     DatePicker("Select Deadline", selection: $deadline, displayedComponents: .date)
                 }
                 
-                Section(header: Text("Category")) {
-                    Picker("Quadrant", selection: $suggestedQuadrant) {
-                        Text("Do First (Urgent & Important)").tag(1)
-                        Text("Schedule (Not Urgent & Important)").tag(2)
-                        Text("Delegate (Urgent & Not Important)").tag(3)
-                        Text("Eliminate (Not Urgent & Not Important)").tag(4)
+                Section(header: Text("Priority Settings")) {
+                    VStack {
+                        Text("Importance: \(Int(importance))")
+                        Slider(value: $importance, in: 0...10, step: 1)
                     }
-                    .pickerStyle(.navigationLink)
-                    
-                    Text("Suggested Quadrant: \(suggestedQuadrant)")
-                            .font(.caption)
-                            .foregroundColor(.gray)
+
+                    VStack {
+                        Text("Urgency: \(Int(urgency))")
+                        Slider(value: $urgency, in: 0...10, step: 1)
+                    }
                 }
             }
             .navigationTitle(task == nil ? "Add Task" : "Edit Task")
@@ -62,13 +64,18 @@ struct TaskInputView: View {
                     .disabled(title.isEmpty)
                 }
             }
-            onAppear {
+            .onAppear {
                 if let task = task {
                     // Pre-fill fields for editing
                     title = task.title ?? ""
                     details = task.details ?? ""
                     deadline = task.deadline ?? Date()
                     suggestedQuadrant = Int(task.quadrant)
+                    importance = task.importanceScore
+                    urgency = task.urgencyScore
+                } else {
+                    print("🚨 Task is nil in TaskInputView.onAppear")
+
                 }
             }
         }
@@ -79,8 +86,8 @@ struct TaskInputView: View {
         taskToSave.title = title
         taskToSave.details = details
         taskToSave.deadline = deadline
-        taskToSave.urgencyScore = calculateUrgency()
-        taskToSave.importanceScore = calculateImportance()
+        taskToSave.urgencyScore = urgency
+        taskToSave.importanceScore = importance
         taskToSave.quadrant = Int16(suggestedQuadrant)
         taskToSave.isCompleted = task?.isCompleted ?? false
         
@@ -120,7 +127,21 @@ struct TaskInputView: View {
     }
 }
 
-#Preview {
-    TaskInputView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+
+#Preview("Task Input View") {
+    guard let context = try? PersistenceController.preview.container.viewContext else {
+        return Text("Failed to load Core Data preview context")
+    }
+
+    let task = TaskItem(context: context)
+    task.title = "New Task"
+    task.details = "Enter details for your new task here."
+    task.deadline = Date()
+    task.quadrant = 2
+    task.isCompleted = false
+
+    try? context.save() // Ensure the task is properly saved
+
+    return TaskInputView(task: task)
+        .environment(\.managedObjectContext, context)
 }

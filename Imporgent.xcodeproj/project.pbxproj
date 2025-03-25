@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A772846B2D8DF9CE005E1F73 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = A772846A2D8DF9CE005E1F73 /* README.md */; };
+		A772846C2D8DF9CE005E1F73 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = A77284692D8DF9CE005E1F73 /* LICENSE.txt */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		A71D6C282D8DA588001B1426 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +32,8 @@
 		A71D6C122D8DA587001B1426 /* Imporgent.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Imporgent.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A71D6C272D8DA588001B1426 /* ImporgentTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImporgentTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		A71D6C312D8DA588001B1426 /* ImporgentUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ImporgentUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A77284692D8DF9CE005E1F73 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		A772846A2D8DF9CE005E1F73 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -95,6 +102,8 @@
 		A71D6C092D8DA587001B1426 = {
 			isa = PBXGroup;
 			children = (
+				A77284692D8DF9CE005E1F73 /* LICENSE.txt */,
+				A772846A2D8DF9CE005E1F73 /* README.md */,
 				A77283FE2D8DA731005E1F73 /* Resources */,
 				A77283FD2D8DA726005E1F73 /* Utilities */,
 				A77283FB2D8DA6E4005E1F73 /* Models */,
@@ -240,6 +249,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A772846B2D8DF9CE005E1F73 /* README.md in Resources */,
+				A772846C2D8DF9CE005E1F73 /* LICENSE.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
