@@ -88,9 +88,20 @@ struct TaskInputView: View {
         taskToSave.deadline = deadline
         taskToSave.urgencyScore = urgency
         taskToSave.importanceScore = importance
-        taskToSave.quadrant = Int16(suggestedQuadrant)
+
+        // Determine quadrant based on importance and urgency
+        if importance >= 5 && urgency >= 5 {
+            taskToSave.quadrant = 1 // High priority, high urgency
+        } else if importance >= 5 {
+            taskToSave.quadrant = 2 // High priority, low urgency
+        } else if urgency >= 5 {
+            taskToSave.quadrant = 3 // High urgency, low priority
+        } else {
+            taskToSave.quadrant = 4 // Low priority, low urgency
+        }
+
         taskToSave.isCompleted = task?.isCompleted ?? false
-        
+
         do {
             try context.save()
         } catch {

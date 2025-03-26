@@ -30,14 +30,17 @@ struct MatrixView: View {
                 VStack {
                     LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
                         ForEach(1...4, id: \.self) { quadrant in
-                            QuadrantView(
-                                tasks: filteredTasks.filter { $0.quadrant == quadrant },
-                                quadrant: quadrant,
-                                selectedTask: $selectedTask
-                            )
-                            .frame(height: 200) // Fixed height per quadrant
-                            .background(Color.gray.opacity(0.1))
-                            .cornerRadius(10)
+                            NavigationLink(destination: QuadrantDetailView(quadrant: quadrant)){
+                                QuadrantView(
+                                    tasks: filteredTasks.filter { $0.quadrant == quadrant },
+                                    quadrant: quadrant,
+                                    selectedTask: $selectedTask
+                                )
+                                .frame(height: 200) // Fixed height per quadrant
+                                .background(Color.gray.opacity(0.1))
+                                .cornerRadius(10)
+                            }
+                            .buttonStyle(PlainButtonStyle()) // Prevents default button styling
                         }
                     }
                 }
