@@ -19,7 +19,9 @@ struct MatrixView: View {
 
     private var filteredTasks: [TaskItem] {
         if let space = selectedSpace {
-            return tasks.filter { $0.tags?.contains(space) == true }
+            return tasks.filter { task in
+                task.tags?.components(separatedBy: ", ").contains(space) == true
+            }
         }
         return Array(tasks)
     }
@@ -116,12 +118,12 @@ struct TaskCard: View {
     var task: TaskItem
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 8) {
             // Use nil-coalescing to provide a default value for optional properties
             Text(task.title ?? "Untitled")
                 .font(.cardTitle)
                 .foregroundColor(.primary)
-                .lineLimit(1)
+                .lineLimit(2)
                 .accessibilityLabel("Task: \(task.title ?? "Untitled")")
             
             // Use nil-coalescing for optional details
@@ -129,7 +131,7 @@ struct TaskCard: View {
                 Text(details)
                     .font(.cardDetail)
                     .foregroundColor(.secondary)
-                    .lineLimit(2)
+                    .lineLimit(3)
                     .accessibilityLabel("Task: \(details)")
             } else {
                 // Provide a placeholder if details are nil or empty
@@ -140,44 +142,54 @@ struct TaskCard: View {
                     .accessibilityLabel("Task: No details")
             }
         }
-        .padding()
+        .padding(12)
         .background(Color(.systemBackground))
-        .cornerRadius(8)
+        .cornerRadius(10)
         .shadow(radius: 2)
     }
 }
 
-// Previews
-#Preview {
-    MatrixView()
-        .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-}
+// MARK: - Previews
+/*
+#Preview("Matrix View - Default") {
+    let context = PersistenceController.preview.container.viewContext
+    let task = TaskItem(context: context)
+    task.title = "Sample Task"
+    task.details = "This is a sample task for testing"
+    task.quadrant = 1
+    task.tags = "Work"
+    
+    try? context.save()
 
-#Preview("Quadrant View") {
+    MatrixView()
+        .environment(\.managedObjectContext, context)
+}
+*/
+#Preview("Quadrant View - Example Quadrant 1") {
     let context = PersistenceController.preview.container.viewContext
     var tasks: [TaskItem] = []
-    
-    for i in 1...5 {
+
+    for i in 1...3 {
         let task = TaskItem(context: context)
-        task.title = "Sample Task \(i)"
-        task.details = "This is sample task \(i) for preview."
+        task.title = "Task \(i)"
+        task.details = "Details for task \(i)"
         task.quadrant = 1
         tasks.append(task)
     }
     
-    // Save the context explicitly
     try? context.save()
-    
+
     return QuadrantView(tasks: tasks, quadrant: 1, selectedTask: .constant(nil))
         .environment(\.managedObjectContext, context)
 }
 
-#Preview("Task Card") {
+#Preview("Task Card - Sample Task") {
     let context = PersistenceController.preview.container.viewContext
     let task = TaskItem(context: context)
-    task.title = "Test Task"
-    task.details = "This task is an example of a fully detailed task card preview."
-    task.deadline = Date()
-    
+    task.title = "Sample Task"
+    task.details = "This is an example task"
+    task.quadrant = 2
+
     return TaskCard(task: task)
+        .environment(\.managedObjectContext, context)
 }
